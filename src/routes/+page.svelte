@@ -2,11 +2,75 @@
     import Icon from "@iconify/svelte";
     import { onMount, onDestroy } from "svelte";
 
+    // Add these variables to your existing script section
+    let touchStartX = 0;
+    let touchEndX = 0;
+    let isMobile = false;
+
+    // Add this function to detect mobile
+    function checkMobile() {
+        isMobile = window.innerWidth <= 768;
+    }
+
+    // Add these touch event handlers
+    function handleTouchStart(event) {
+        if (!isMobile) return;
+        touchStartX = event.touches[0].clientX;
+    }
+
+    function handleTouchMove(event) {
+        if (!isMobile) return;
+        event.preventDefault(); // Prevent scrolling
+    }
+
+    function handleTouchEnd(event) {
+        if (!isMobile) return;
+        touchEndX = event.changedTouches[0].clientX;
+        handleSwipe();
+    }
+
+    function handleSwipe() {
+        const swipeThreshold = 50;
+        const swipeDistance = touchStartX - touchEndX;
+
+        if (Math.abs(swipeDistance) > swipeThreshold) {
+            if (swipeDistance > 0) {
+                // Swipe left - next
+                moveVideoNext();
+            } else {
+                // Swipe right - previous
+                moveVideoPrevious();
+            }
+        }
+    }
+
+    // Add this to your existing onMount or component initialization
+    onMount(() => {
+        checkMobile();
+        window.addEventListener("resize", checkMobile);
+
+        return () => {
+            window.removeEventListener("resize", checkMobile);
+        };
+    });
+
     let currentIndex = 0;
-    const cardsToShow = 4;
+    let responsiveCardsToShow = 4;
+
+    const getCardsToShow = () => {
+        if (typeof window !== "undefined") {
+            // if (window.innerWidth < 600) return 1;
+            // if (window.innerWidth < 900) return 2;
+            if (window.innerWidth < 480) return 1; // Very small phones
+            if (window.innerWidth < 768) return 2; // Mobile/tablet
+            if (window.innerWidth < 1024) return 3; // Tablet
+            return 4;
+        }
+        return 4;
+    };
 
     const moveToNext = () => {
-        if (currentIndex + cardsToShow < infoCards.length) {
+        if (currentIndex + responsiveCardsToShow < infoCards.length) {
             currentIndex += 1;
         }
     };
@@ -148,7 +212,7 @@
     ];
 
     const moveVideoNext = () => {
-        if (videoIndex + cardsToShow < videoProducts.length) {
+        if (videoIndex + responsiveCardsToShow < videoProducts.length) {
             videoIndex += 1;
         }
     };
@@ -158,6 +222,32 @@
             videoIndex -= 1;
         }
     };
+
+    // Handle responsive behavior
+    onMount(() => {
+        responsiveCardsToShow = getCardsToShow();
+
+        const handleResize = () => {
+            responsiveCardsToShow = getCardsToShow();
+
+            // Reset indices if out of bounds
+            if (currentIndex + responsiveCardsToShow > infoCards.length) {
+                currentIndex = Math.max(
+                    0,
+                    infoCards.length - responsiveCardsToShow,
+                );
+            }
+            if (videoIndex + responsiveCardsToShow > videoProducts.length) {
+                videoIndex = Math.max(
+                    0,
+                    videoProducts.length - responsiveCardsToShow,
+                );
+            }
+        };
+
+        window.addEventListener("resize", handleResize);
+        return () => window.removeEventListener("resize", handleResize);
+    });
 </script>
 
 <section class="hero-banner">
@@ -220,24 +310,30 @@
             </button>
         </div>
     </div>
-    <div class="cards-grid">
-        {#each infoCards.slice(currentIndex, currentIndex + cardsToShow) as card}
-            <a
-                href={card.link}
-                class="info-card"
-                target="_blank"
-                rel="noopener noreferrer"
-            >
-                <div class="image-wrapper">
-                    <img src={card.image} alt={card.title} />
-                </div>
-                <div class="info-card-content">
-                    <h3>{card.title}</h3>
-                    <p class="price">{card.price}</p>
-                    <span class="buy-button">Buy now</span>
-                </div>
-            </a>
-        {/each}
+    <div class="cards-carousel">
+        <div
+            class="cards-container"
+            style="transform: translateX(-{currentIndex *
+                (100 / responsiveCardsToShow)}%)"
+        >
+            {#each infoCards as card}
+                <a
+                    href={card.link}
+                    class="info-card"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                >
+                    <div class="image-wrapper">
+                        <img src={card.image} alt={card.title} />
+                    </div>
+                    <div class="info-card-content">
+                        <h3>{card.title}</h3>
+                        <p class="price">{card.price}</p>
+                        <span class="buy-button">Buy now</span>
+                    </div>
+                </a>
+            {/each}
+        </div>
     </div>
 </section>
 
@@ -289,7 +385,7 @@
 <section class="video-cards">
     <div class="video-cards-content">
         <h2>Product Demonstrations</h2>
-        <div class="carousel-arrows">
+        <div class="carousel-arrows" class:mobile-hidden={isMobile}>
             <button class="arrow left" on:click={moveVideoPrevious}>
                 <Icon icon="mingcute:left-line" width="24" height="24" />
             </button>
@@ -298,28 +394,50 @@
             </button>
         </div>
     </div>
-    <div class="cards-grid">
-        {#each videoProducts.slice(videoIndex, videoIndex + cardsToShow) as product}
-            <div class="video-card">
-                <div class="video-container">
-                    <video src={product.video} muted loop autoplay playsinline
-                    ></video>
-                    <div class="video-overlay">
-                        <div class="product-thumbnail">
-                            <img src={product.image} alt={product.title} />
-                        </div>
-                        <div class="product-info">
-                            <h3>{product.title}</h3>
-                            <p class="price">{product.price}</p>
+    <div
+        class="cards-carousel"
+        on:touchstart={handleTouchStart}
+        on:touchmove={handleTouchMove}
+        on:touchend={handleTouchEnd}
+    >
+        <div
+            class="cards-container"
+            style="transform: translateX(-{videoIndex *
+                (100 / responsiveCardsToShow)}%)"
+        >
+            {#each videoProducts as product}
+                <div class="video-card">
+                    <div class="video-container">
+                        <video
+                            src={product.video}
+                            muted
+                            loop
+                            autoplay
+                            playsinline
+                        ></video>
+                        <div class="video-overlay">
+                            <div class="product-thumbnail">
+                                <img src={product.image} alt={product.title} />
+                            </div>
+                            <div class="product-info">
+                                <h3>{product.title}</h3>
+                                <p class="price">{product.price}</p>
+                            </div>
                         </div>
                     </div>
                 </div>
-            </div>
-        {/each}
+            {/each}
+        </div>
     </div>
 </section>
 
 <style lang="scss">
+    .mobile-hidden {
+        @media (max-width: 768px) {
+            display: none !important;
+        }
+    }
+
     .hero-banner {
         position: relative;
         overflow: hidden;
@@ -327,6 +445,11 @@
         min-height: 120vh;
         display: flex;
         align-items: center;
+
+        @media (max-width: 768px) {
+            min-height: 80vh;
+            padding: 4rem 1rem 2rem;
+        }
 
         .hero-video {
             position: absolute;
@@ -796,6 +919,22 @@
         background-color: #ffffff;
         text-align: center;
 
+        @media (max-width: 768px) {
+            position: relative;
+
+            &::after {
+                content: "";
+                position: absolute;
+                bottom: 1rem;
+                left: 50%;
+                transform: translateX(-50%);
+                width: 40px;
+                height: 4px;
+                background: rgba(49, 68, 56, 0.3);
+                border-radius: 2px;
+            }
+        }
+
         .video-cards-content {
             display: flex;
             justify-content: space-between;
@@ -954,6 +1093,54 @@
             &:hover {
                 background-color: #1d4ed8;
             }
+        }
+    }
+
+    .cards-carousel {
+        overflow: hidden;
+        max-width: 1000px;
+        margin: 0 auto;
+        touch-action: pan-y;
+
+        @media (max-width: 768px) {
+            touch-action: pan-y;
+            cursor: grab;
+
+            &:active {
+                cursor: grabbing;
+            }
+        }
+    }
+
+    .cards-container {
+        display: flex;
+        transition: transform 0.3s ease;
+        gap: 1.5rem;
+
+        @media (max-width: 768px) {
+            transition: transform 0.3s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+        }
+    }
+
+    .info-card {
+        flex: 0 0 calc(25% - 1.125rem);
+    }
+
+    .video-card {
+        flex: 0 0 calc(25% - 1.125rem);
+    }
+
+    @media (max-width: 900px) {
+        .info-card,
+        .video-card {
+            flex: 0 0 calc(50% - 0.75rem);
+        }
+    }
+
+    @media (max-width: 600px) {
+        .info-card,
+        .video-card {
+            flex: 0 0 100%;
         }
     }
 </style>

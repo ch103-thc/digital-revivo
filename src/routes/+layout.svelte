@@ -311,13 +311,6 @@
 				</a>
 			</div>
 
-			<button class="menu-toggle" onclick={toggleMenu}>
-				<Icon
-					icon={isMenuOpen ? "mdi:close" : "mdi:menu"}
-					width="24"
-					height="24"
-				/>
-			</button>
 			<div class="nav-right">
 				<div class="search-container">
 					<div class="search-wrapper">
@@ -414,6 +407,14 @@
 					</li>
 				</ul>
 			</div>
+
+			<button class="menu-toggle" onclick={toggleMenu}>
+				<Icon
+					icon={isMenuOpen ? "mdi:close" : "mdi:menu"}
+					width="24"
+					height="24"
+				/>
+			</button>
 		</div>
 	</div>
 
