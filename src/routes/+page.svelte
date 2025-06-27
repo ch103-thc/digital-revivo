@@ -95,6 +95,29 @@
         },
     ];
 
+    const deviceCards = [
+        {
+            image: "/img/devices/booster-pro.png",
+            title: "Device 1",
+            link: "/products/device-1",
+        },
+        {
+            image: "/img/devices/booster-h.png",
+            title: "Device 2",
+            link: "/products/device-2",
+        },
+        {
+            image: "/img/devices/airshot.png",
+            title: "Device 3",
+            link: "/products/device-3",
+        },
+        {
+            image: "/img/devices/device4.jpg",
+            title: "Device 4",
+            link: "/products/device-4",
+        },
+    ];
+
     let videoIndex = 0;
     const videoProducts = [
         {
@@ -180,10 +203,8 @@
 <!-- NEW BESTSELLERS SECTION -->
 <section class="bestsellers">
     <div class="bestsellers-content">
-        <h2>Best Sellers</h2>
-        <a href="/collections/bestsellers" class="view-all-link">
-            View all products
-        </a>
+        <h2>Our best selling products</h2>
+        <a href="/collections/bestsellers" class="view-all-link">View All</a>
     </div>
     <div class="cards-grid">
         {#each bestsellers as product}
@@ -221,7 +242,8 @@
         </div>
     </div>
     <div class="cards-grid">
-        {#each infoCards.slice(currentIndex, currentIndex + cardsToShow) as card}
+        <!-- MODIFY: Show all cards on mobile for horizontal scroll, sliced cards for desktop -->
+        {#each typeof window !== "undefined" && window.innerWidth <= 768 ? infoCards : infoCards.slice(currentIndex, currentIndex + cardsToShow) as card}
             <a
                 href={card.link}
                 class="info-card"
@@ -262,9 +284,7 @@
     <div class="promo-cards-content">
         <div class="promo-header">
             <h2>Skincare Essentials</h2>
-            <a href="/collections" class="view-all-link">
-                View all collections
-            </a>
+            <a href="/collections" class="view-all-link">View All</a>
         </div>
         <div class="promo-grid">
             <a href="/collections/moisturizers" class="promo-card">
@@ -286,6 +306,24 @@
     </div>
 </section>
 
+<section class="device-cards">
+    <div class="device-cards-content">
+        <h2>Beauty Device Picks</h2>
+        <div class="device-grid">
+            {#each deviceCards as card}
+                <a
+                    href={card.link}
+                    class="device-card"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                >
+                    <img src={card.image} alt={card.title} />
+                </a>
+            {/each}
+        </div>
+    </div>
+</section>
+
 <section class="video-cards">
     <div class="video-cards-content">
         <h2>Product Demonstrations</h2>
@@ -299,7 +337,8 @@
         </div>
     </div>
     <div class="cards-grid">
-        {#each videoProducts.slice(videoIndex, videoIndex + cardsToShow) as product}
+        <!-- MODIFY: Show all cards on mobile for horizontal scroll, sliced cards for desktop -->
+        {#each typeof window !== "undefined" && window.innerWidth <= 768 ? videoProducts : videoProducts.slice(videoIndex, videoIndex + cardsToShow) as product}
             <div class="video-card">
                 <div class="video-container">
                     <video src={product.video} muted loop autoplay playsinline
@@ -352,11 +391,12 @@
             @media (max-width: 768px) {
                 grid-template-columns: 1fr;
                 gap: 2rem;
-                text-align: center;
-            }
-
-            @media (max-width: 480px) {
-                gap: 1.5rem;
+                text-align: left;
+                position: absolute;
+                bottom: 4rem;
+                left: 1.5rem;
+                right: 1.5rem;
+                margin: 0;
             }
 
             .hero-text {
@@ -372,8 +412,7 @@
                     }
 
                     @media (max-width: 480px) {
-                        font-size: 1.75rem;
-                        margin-bottom: 1rem;
+                        font-size: 2rem;
                     }
                 }
 
@@ -385,11 +424,6 @@
 
                     @media (max-width: 768px) {
                         font-size: 1.125rem;
-                    }
-
-                    @media (max-width: 480px) {
-                        font-size: 1rem;
-                        margin-bottom: 1.5rem;
                     }
                 }
 
@@ -405,13 +439,6 @@
                     transition: all 0.3s ease;
                     text-transform: uppercase;
                     letter-spacing: 0.5px;
-                    display: inline-block;
-                    text-decoration: none;
-
-                    @media (max-width: 480px) {
-                        padding: 0.875rem 2rem;
-                        font-size: 1rem;
-                    }
 
                     &:hover {
                         transform: translateY(-2px);
@@ -427,21 +454,12 @@
         background-color: #ffffff;
         text-align: center;
 
-        @media (max-width: 480px) {
-            padding: 2rem 1rem;
-        }
-
         .bestsellers-content {
             display: flex;
             justify-content: space-between;
             align-items: center;
             max-width: 1000px;
             margin: 0 auto 2rem;
-
-            @media (max-width: 480px) {
-                gap: 1rem;
-                margin-bottom: 1.5rem;
-            }
 
             h2 {
                 font-size: 1.875rem;
@@ -450,7 +468,7 @@
                 margin: 0;
                 text-align: left;
 
-                @media (max-width: 480px) {
+                @media (max-width: 768px) {
                     font-size: 1.5rem;
                 }
             }
@@ -461,17 +479,12 @@
                 text-decoration: underline;
                 text-underline-offset: 4px;
                 transition: color 0.3s;
-                flex-shrink: 0;
-
-                @media (max-width: 480px) {
-                    font-size: 0.9rem;
-                }
             }
         }
 
         .cards-grid {
             display: grid;
-            grid-template-columns: repeat(1, 1fr);
+            grid-template-columns: repeat(2, 1fr);
             gap: 1.5rem;
             max-width: 1000px;
             margin: 0 auto;
@@ -482,10 +495,6 @@
 
             @media (min-width: 1024px) {
                 grid-template-columns: repeat(4, 1fr);
-            }
-
-            @media (max-width: 480px) {
-                gap: 1rem;
             }
         }
 
@@ -563,10 +572,6 @@
         background-color: #f3eeea;
         text-align: center;
 
-        @media (max-width: 480px) {
-            padding: 2rem 1rem;
-        }
-
         .info-cards-content {
             display: flex;
             justify-content: space-between;
@@ -574,10 +579,8 @@
             max-width: 1000px;
             margin: 0 auto 2rem;
 
-            @media (max-width: 480px) {
-                flex-direction: column;
-                gap: 1rem;
-                margin-bottom: 1.5rem;
+            @media (max-width: 768px) {
+                padding-left: 1rem;
             }
 
             h2 {
@@ -587,7 +590,7 @@
                 margin: 0;
                 text-align: left;
 
-                @media (max-width: 480px) {
+                @media (max-width: 768px) {
                     font-size: 1.5rem;
                 }
             }
@@ -642,31 +645,19 @@
                 grid-template-columns: repeat(4, 1fr);
             }
 
-            @media (max-width: 767px) {
+            @media (max-width: 768px) {
                 display: flex;
                 overflow-x: auto;
                 scroll-behavior: smooth;
                 gap: 1rem;
+                padding: 0 1rem 1rem 1rem;
+                margin: 0;
                 max-width: none;
-                margin: 0 -1rem;
-                padding: 0 1rem;
-                scroll-snap-type: x mandatory;
 
                 scrollbar-width: none;
                 -ms-overflow-style: none;
                 &::-webkit-scrollbar {
                     display: none;
-                }
-
-                .info-card {
-                    flex: 0 0 280px;
-                    scroll-snap-align: start;
-                }
-            }
-
-            @media (max-width: 480px) {
-                .info-card {
-                    flex: 0 0 250px;
                 }
             }
         }
@@ -678,6 +669,11 @@
             border-radius: 0.5rem;
             text-align: left;
             overflow: hidden;
+
+            @media (max-width: 768px) {
+                flex: 0 0 280px;
+                width: 280px;
+            }
 
             .image-wrapper {
                 width: 100%;
@@ -744,10 +740,6 @@
         background-color: #ffffff;
         text-align: center;
 
-        @media (max-width: 480px) {
-            padding: 2rem 1rem;
-        }
-
         .brand-cards-content {
             max-width: 1000px;
             margin: 0 auto;
@@ -759,9 +751,8 @@
                 margin-bottom: 2rem;
                 text-align: left;
 
-                @media (max-width: 480px) {
+                @media (max-width: 768px) {
                     font-size: 1.5rem;
-                    margin-bottom: 1.5rem;
                 }
             }
 
@@ -772,10 +763,6 @@
 
                 @media (min-width: 768px) {
                     grid-template-columns: repeat(3, 1fr);
-                }
-
-                @media (max-width: 480px) {
-                    gap: 1rem;
                 }
 
                 .brand-card {
@@ -794,10 +781,6 @@
                         width: 100%;
                         height: 300px;
                         object-fit: cover;
-
-                        @media (max-width: 480px) {
-                            height: 250px;
-                        }
                     }
 
                     h3 {
@@ -816,10 +799,6 @@
         background-color: #f3eeea;
         text-align: center;
 
-        @media (max-width: 480px) {
-            padding: 2rem 1rem;
-        }
-
         .promo-cards-content {
             max-width: 1000px;
             margin: 0 auto;
@@ -830,18 +809,13 @@
                 align-items: center;
                 margin-bottom: 2rem;
 
-                @media (max-width: 480px) {
-                    gap: 1rem;
-                    margin-bottom: 1.5rem;
-                }
-
                 h2 {
                     margin: 0;
                     font-size: 1.875rem;
                     font-weight: 700;
                     color: #111827;
 
-                    @media (max-width: 480px) {
+                    @media (max-width: 768px) {
                         font-size: 1.5rem;
                     }
                 }
@@ -852,11 +826,6 @@
                     text-decoration: underline;
                     text-underline-offset: 4px;
                     transition: color 0.3s;
-                    flex-shrink: 0;
-
-                    @media (max-width: 480px) {
-                        font-size: 0.9rem;
-                    }
                 }
             }
 
@@ -867,10 +836,6 @@
 
                 @media (min-width: 768px) {
                     grid-template-columns: repeat(2, 1fr);
-                }
-
-                @media (max-width: 480px) {
-                    gap: 1rem;
                 }
             }
 
@@ -886,10 +851,6 @@
                     height: 450px;
                     object-fit: cover;
                     display: block;
-
-                    @media (max-width: 480px) {
-                        height: 350px;
-                    }
                 }
 
                 .promo-card-content {
@@ -909,16 +870,70 @@
                         transition: all 0.3s ease;
                         cursor: pointer;
 
-                        @media (max-width: 480px) {
-                            padding: 0.75rem 1.5rem;
-                            font-size: 0.8rem;
-                        }
-
                         &:hover {
                             transform: translateY(-2px);
                             box-shadow: 0 8px 20px rgba(49, 68, 56, 0.3);
                         }
                     }
+                }
+            }
+        }
+    }
+
+    .device-cards {
+        padding: 4rem 1.5rem;
+        background-color: #f3eeea;
+        text-align: center;
+
+        .device-cards-content {
+            max-width: 1000px;
+            margin: 0 auto;
+
+            h2 {
+                font-size: 1.875rem;
+                font-weight: 700;
+                color: #111827;
+                margin-bottom: 2rem;
+                text-align: left;
+
+                @media (max-width: 768px) {
+                    font-size: 1.5rem;
+                }
+            }
+
+            .device-grid {
+                display: grid;
+                grid-template-columns: repeat(1, 1fr);
+                gap: 1.5rem;
+
+                @media (min-width: 768px) {
+                    grid-template-columns: repeat(2, 1fr);
+                }
+
+                @media (min-width: 1024px) {
+                    grid-template-columns: repeat(4, 1fr);
+                }
+            }
+
+            .device-card {
+                position: relative;
+                width: 100%;
+                height: 350px;
+                overflow: hidden;
+                border-radius: 0.5rem;
+                display: block;
+                box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
+                transition: transform 0.3s;
+
+                &:hover {
+                    transform: scale(1.02);
+                }
+
+                img {
+                    width: 100%;
+                    height: 100%;
+                    object-fit: cover;
+                    display: block;
                 }
             }
         }
@@ -936,6 +951,10 @@
             max-width: 1000px;
             margin: 0 auto 2rem;
 
+            @media (max-width: 768px) {
+                padding-left: 1rem;
+            }
+
             h2 {
                 font-size: 1.875rem;
                 font-weight: 700;
@@ -943,7 +962,7 @@
                 margin: 0;
                 text-align: left;
 
-                @media (max-width: 480px) {
+                @media (max-width: 768px) {
                     font-size: 1.5rem;
                 }
             }
@@ -1003,18 +1022,15 @@
                 overflow-x: auto;
                 scroll-behavior: smooth;
                 gap: 1rem;
+                padding: 0 1rem 1rem 1rem;
+                margin: 0;
                 max-width: none;
-                margin: 0 -1.5rem;
-                padding: 0 1.5rem;
 
                 scrollbar-width: none;
                 -ms-overflow-style: none;
-
                 &::-webkit-scrollbar {
                     display: none;
                 }
-
-                scroll-snap-type: x mandatory;
             }
         }
 
@@ -1034,20 +1050,12 @@
 
             @media (max-width: 768px) {
                 flex: 0 0 280px;
-                scroll-snap-align: start;
-
-                &:hover {
-                    transform: none;
-                }
+                width: 280px;
             }
 
             .video-container {
                 position: relative;
                 height: 400px;
-
-                @media (max-width: 768px) {
-                    height: 350px;
-                }
 
                 video {
                     width: 100%;
@@ -1079,11 +1087,6 @@
                         flex-shrink: 0;
                         box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
 
-                        @media (max-width: 768px) {
-                            width: 40px;
-                            height: 40px;
-                        }
-
                         img {
                             width: 100%;
                             height: 100%;
@@ -1105,11 +1108,6 @@
                             overflow: hidden;
                             text-overflow: ellipsis;
                             max-width: 150px;
-
-                            @media (max-width: 768px) {
-                                font-size: 0.9rem;
-                                max-width: 180px;
-                            }
                         }
 
                         .price {
@@ -1117,10 +1115,6 @@
                             color: #fff;
                             margin: 0;
                             text-shadow: 0 2px 4px rgba(0, 0, 0, 0.5);
-
-                            @media (max-width: 768px) {
-                                font-size: 0.9rem;
-                            }
                         }
                     }
                 }
