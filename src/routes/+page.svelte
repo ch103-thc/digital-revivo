@@ -411,8 +411,6 @@
                     @media (max-width: 480px) {
                         padding: 0.875rem 2rem;
                         font-size: 1rem;
-                        width: 100%;
-                        text-align: center;
                     }
 
                     &:hover {
@@ -456,8 +454,6 @@
 
                 @media (max-width: 480px) {
                     font-size: 1.5rem;
-                    text-align: center;
-                    width: 100%;
                 }
             }
 
@@ -594,7 +590,6 @@
 
                 @media (max-width: 480px) {
                     font-size: 1.5rem;
-                    text-align: center;
                 }
             }
 
@@ -767,7 +762,6 @@
 
                 @media (max-width: 480px) {
                     font-size: 1.5rem;
-                    text-align: center;
                     margin-bottom: 1.5rem;
                 }
             }
@@ -803,7 +797,7 @@
                         object-fit: cover;
 
                         @media (max-width: 480px) {
-                            height: 200px;
+                            height: 250px;
                         }
                     }
 
@@ -891,7 +885,7 @@
                     display: block;
 
                     @media (max-width: 480px) {
-                        height: 300px;
+                        height: 350px;
                     }
                 }
 
