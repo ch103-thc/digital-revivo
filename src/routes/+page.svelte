@@ -180,7 +180,7 @@
 <!-- NEW BESTSELLERS SECTION -->
 <section class="bestsellers">
     <div class="bestsellers-content">
-        <h2>Our best selling products right now</h2>
+        <h2>Best Sellers</h2>
         <a href="/collections/bestsellers" class="view-all-link">
             View all products
         </a>
@@ -439,8 +439,6 @@
             margin: 0 auto 2rem;
 
             @media (max-width: 480px) {
-                flex-direction: column;
-                align-items: flex-start;
                 gap: 1rem;
                 margin-bottom: 1.5rem;
             }
@@ -463,9 +461,10 @@
                 text-decoration: underline;
                 text-underline-offset: 4px;
                 transition: color 0.3s;
+                flex-shrink: 0;
 
                 @media (max-width: 480px) {
-                    align-self: center;
+                    font-size: 0.9rem;
                 }
             }
         }
@@ -832,7 +831,6 @@
                 margin-bottom: 2rem;
 
                 @media (max-width: 480px) {
-                    flex-direction: column;
                     gap: 1rem;
                     margin-bottom: 1.5rem;
                 }
@@ -854,6 +852,11 @@
                     text-decoration: underline;
                     text-underline-offset: 4px;
                     transition: color 0.3s;
+                    flex-shrink: 0;
+
+                    @media (max-width: 480px) {
+                        font-size: 0.9rem;
+                    }
                 }
             }
 
@@ -939,6 +942,10 @@
                 color: #111827;
                 margin: 0;
                 text-align: left;
+
+                @media (max-width: 480px) {
+                    font-size: 1.5rem;
+                }
             }
 
             .carousel-arrows {
