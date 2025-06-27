@@ -2,75 +2,11 @@
     import Icon from "@iconify/svelte";
     import { onMount, onDestroy } from "svelte";
 
-    // Add these variables to your existing script section
-    let touchStartX = 0;
-    let touchEndX = 0;
-    let isMobile = false;
-
-    // Add this function to detect mobile
-    function checkMobile() {
-        isMobile = window.innerWidth <= 768;
-    }
-
-    // Add these touch event handlers
-    function handleTouchStart(event) {
-        if (!isMobile) return;
-        touchStartX = event.touches[0].clientX;
-    }
-
-    function handleTouchMove(event) {
-        if (!isMobile) return;
-        event.preventDefault(); // Prevent scrolling
-    }
-
-    function handleTouchEnd(event) {
-        if (!isMobile) return;
-        touchEndX = event.changedTouches[0].clientX;
-        handleSwipe();
-    }
-
-    function handleSwipe() {
-        const swipeThreshold = 50;
-        const swipeDistance = touchStartX - touchEndX;
-
-        if (Math.abs(swipeDistance) > swipeThreshold) {
-            if (swipeDistance > 0) {
-                // Swipe left - next
-                moveVideoNext();
-            } else {
-                // Swipe right - previous
-                moveVideoPrevious();
-            }
-        }
-    }
-
-    // Add this to your existing onMount or component initialization
-    onMount(() => {
-        checkMobile();
-        window.addEventListener("resize", checkMobile);
-
-        return () => {
-            window.removeEventListener("resize", checkMobile);
-        };
-    });
-
     let currentIndex = 0;
-    let responsiveCardsToShow = 4;
-
-    const getCardsToShow = () => {
-        if (typeof window !== "undefined") {
-            // if (window.innerWidth < 600) return 1;
-            // if (window.innerWidth < 900) return 2;
-            if (window.innerWidth < 480) return 1; // Very small phones
-            if (window.innerWidth < 768) return 2; // Mobile/tablet
-            if (window.innerWidth < 1024) return 3; // Tablet
-            return 4;
-        }
-        return 4;
-    };
+    const cardsToShow = 4;
 
     const moveToNext = () => {
-        if (currentIndex + responsiveCardsToShow < infoCards.length) {
+        if (currentIndex + cardsToShow < infoCards.length) {
             currentIndex += 1;
         }
     };
@@ -212,7 +148,7 @@
     ];
 
     const moveVideoNext = () => {
-        if (videoIndex + responsiveCardsToShow < videoProducts.length) {
+        if (videoIndex + cardsToShow < videoProducts.length) {
             videoIndex += 1;
         }
     };
@@ -222,32 +158,6 @@
             videoIndex -= 1;
         }
     };
-
-    // Handle responsive behavior
-    onMount(() => {
-        responsiveCardsToShow = getCardsToShow();
-
-        const handleResize = () => {
-            responsiveCardsToShow = getCardsToShow();
-
-            // Reset indices if out of bounds
-            if (currentIndex + responsiveCardsToShow > infoCards.length) {
-                currentIndex = Math.max(
-                    0,
-                    infoCards.length - responsiveCardsToShow,
-                );
-            }
-            if (videoIndex + responsiveCardsToShow > videoProducts.length) {
-                videoIndex = Math.max(
-                    0,
-                    videoProducts.length - responsiveCardsToShow,
-                );
-            }
-        };
-
-        window.addEventListener("resize", handleResize);
-        return () => window.removeEventListener("resize", handleResize);
-    });
 </script>
 
 <section class="hero-banner">
@@ -310,30 +220,24 @@
             </button>
         </div>
     </div>
-    <div class="cards-carousel">
-        <div
-            class="cards-container"
-            style="transform: translateX(-{currentIndex *
-                (100 / responsiveCardsToShow)}%)"
-        >
-            {#each infoCards as card}
-                <a
-                    href={card.link}
-                    class="info-card"
-                    target="_blank"
-                    rel="noopener noreferrer"
-                >
-                    <div class="image-wrapper">
-                        <img src={card.image} alt={card.title} />
-                    </div>
-                    <div class="info-card-content">
-                        <h3>{card.title}</h3>
-                        <p class="price">{card.price}</p>
-                        <span class="buy-button">Buy now</span>
-                    </div>
-                </a>
-            {/each}
-        </div>
+    <div class="cards-grid">
+        {#each infoCards.slice(currentIndex, currentIndex + cardsToShow) as card}
+            <a
+                href={card.link}
+                class="info-card"
+                target="_blank"
+                rel="noopener noreferrer"
+            >
+                <div class="image-wrapper">
+                    <img src={card.image} alt={card.title} />
+                </div>
+                <div class="info-card-content">
+                    <h3>{card.title}</h3>
+                    <p class="price">{card.price}</p>
+                    <span class="buy-button">Buy now</span>
+                </div>
+            </a>
+        {/each}
     </div>
 </section>
 
@@ -385,7 +289,7 @@
 <section class="video-cards">
     <div class="video-cards-content">
         <h2>Product Demonstrations</h2>
-        <div class="carousel-arrows" class:mobile-hidden={isMobile}>
+        <div class="carousel-arrows">
             <button class="arrow left" on:click={moveVideoPrevious}>
                 <Icon icon="mingcute:left-line" width="24" height="24" />
             </button>
@@ -394,50 +298,28 @@
             </button>
         </div>
     </div>
-    <div
-        class="cards-carousel"
-        on:touchstart={handleTouchStart}
-        on:touchmove={handleTouchMove}
-        on:touchend={handleTouchEnd}
-    >
-        <div
-            class="cards-container"
-            style="transform: translateX(-{videoIndex *
-                (100 / responsiveCardsToShow)}%)"
-        >
-            {#each videoProducts as product}
-                <div class="video-card">
-                    <div class="video-container">
-                        <video
-                            src={product.video}
-                            muted
-                            loop
-                            autoplay
-                            playsinline
-                        ></video>
-                        <div class="video-overlay">
-                            <div class="product-thumbnail">
-                                <img src={product.image} alt={product.title} />
-                            </div>
-                            <div class="product-info">
-                                <h3>{product.title}</h3>
-                                <p class="price">{product.price}</p>
-                            </div>
+    <div class="cards-grid">
+        {#each videoProducts.slice(videoIndex, videoIndex + cardsToShow) as product}
+            <div class="video-card">
+                <div class="video-container">
+                    <video src={product.video} muted loop autoplay playsinline
+                    ></video>
+                    <div class="video-overlay">
+                        <div class="product-thumbnail">
+                            <img src={product.image} alt={product.title} />
+                        </div>
+                        <div class="product-info">
+                            <h3>{product.title}</h3>
+                            <p class="price">{product.price}</p>
                         </div>
                     </div>
                 </div>
-            {/each}
-        </div>
+            </div>
+        {/each}
     </div>
 </section>
 
 <style lang="scss">
-    .mobile-hidden {
-        @media (max-width: 768px) {
-            display: none !important;
-        }
-    }
-
     .hero-banner {
         position: relative;
         overflow: hidden;
@@ -445,11 +327,6 @@
         min-height: 120vh;
         display: flex;
         align-items: center;
-
-        @media (max-width: 768px) {
-            min-height: 80vh;
-            padding: 4rem 1rem 2rem;
-        }
 
         .hero-video {
             position: absolute;
@@ -478,6 +355,10 @@
                 text-align: center;
             }
 
+            @media (max-width: 480px) {
+                gap: 1.5rem;
+            }
+
             .hero-text {
                 h1 {
                     font-size: 3rem;
@@ -491,7 +372,8 @@
                     }
 
                     @media (max-width: 480px) {
-                        font-size: 2rem;
+                        font-size: 1.75rem;
+                        margin-bottom: 1rem;
                     }
                 }
 
@@ -503,6 +385,11 @@
 
                     @media (max-width: 768px) {
                         font-size: 1.125rem;
+                    }
+
+                    @media (max-width: 480px) {
+                        font-size: 1rem;
+                        margin-bottom: 1.5rem;
                     }
                 }
 
@@ -518,6 +405,15 @@
                     transition: all 0.3s ease;
                     text-transform: uppercase;
                     letter-spacing: 0.5px;
+                    display: inline-block;
+                    text-decoration: none;
+
+                    @media (max-width: 480px) {
+                        padding: 0.875rem 2rem;
+                        font-size: 1rem;
+                        width: 100%;
+                        text-align: center;
+                    }
 
                     &:hover {
                         transform: translateY(-2px);
@@ -533,6 +429,10 @@
         background-color: #ffffff;
         text-align: center;
 
+        @media (max-width: 480px) {
+            padding: 2rem 1rem;
+        }
+
         .bestsellers-content {
             display: flex;
             justify-content: space-between;
@@ -540,12 +440,25 @@
             max-width: 1000px;
             margin: 0 auto 2rem;
 
+            @media (max-width: 480px) {
+                flex-direction: column;
+                align-items: flex-start;
+                gap: 1rem;
+                margin-bottom: 1.5rem;
+            }
+
             h2 {
                 font-size: 1.875rem;
                 font-weight: 700;
                 color: #111827;
                 margin: 0;
                 text-align: left;
+
+                @media (max-width: 480px) {
+                    font-size: 1.5rem;
+                    text-align: center;
+                    width: 100%;
+                }
             }
 
             .view-all-link {
@@ -554,6 +467,10 @@
                 text-decoration: underline;
                 text-underline-offset: 4px;
                 transition: color 0.3s;
+
+                @media (max-width: 480px) {
+                    align-self: center;
+                }
             }
         }
 
@@ -570,6 +487,10 @@
 
             @media (min-width: 1024px) {
                 grid-template-columns: repeat(4, 1fr);
+            }
+
+            @media (max-width: 480px) {
+                gap: 1rem;
             }
         }
 
@@ -647,6 +568,10 @@
         background-color: #f3eeea;
         text-align: center;
 
+        @media (max-width: 480px) {
+            padding: 2rem 1rem;
+        }
+
         .info-cards-content {
             display: flex;
             justify-content: space-between;
@@ -654,17 +579,32 @@
             max-width: 1000px;
             margin: 0 auto 2rem;
 
+            @media (max-width: 480px) {
+                flex-direction: column;
+                gap: 1rem;
+                margin-bottom: 1.5rem;
+            }
+
             h2 {
                 font-size: 1.875rem;
                 font-weight: 700;
                 color: #111827;
                 margin: 0;
                 text-align: left;
+
+                @media (max-width: 480px) {
+                    font-size: 1.5rem;
+                    text-align: center;
+                }
             }
 
             .carousel-arrows {
                 display: flex;
                 gap: 0.75rem;
+
+                @media (max-width: 768px) {
+                    display: none;
+                }
 
                 .arrow {
                     background-color: transparent;
@@ -706,6 +646,34 @@
 
             @media (min-width: 1024px) {
                 grid-template-columns: repeat(4, 1fr);
+            }
+
+            @media (max-width: 767px) {
+                display: flex;
+                overflow-x: auto;
+                scroll-behavior: smooth;
+                gap: 1rem;
+                max-width: none;
+                margin: 0 -1rem;
+                padding: 0 1rem;
+                scroll-snap-type: x mandatory;
+
+                scrollbar-width: none;
+                -ms-overflow-style: none;
+                &::-webkit-scrollbar {
+                    display: none;
+                }
+
+                .info-card {
+                    flex: 0 0 280px;
+                    scroll-snap-align: start;
+                }
+            }
+
+            @media (max-width: 480px) {
+                .info-card {
+                    flex: 0 0 250px;
+                }
             }
         }
 
@@ -782,6 +750,10 @@
         background-color: #ffffff;
         text-align: center;
 
+        @media (max-width: 480px) {
+            padding: 2rem 1rem;
+        }
+
         .brand-cards-content {
             max-width: 1000px;
             margin: 0 auto;
@@ -792,6 +764,12 @@
                 color: #111827;
                 margin-bottom: 2rem;
                 text-align: left;
+
+                @media (max-width: 480px) {
+                    font-size: 1.5rem;
+                    text-align: center;
+                    margin-bottom: 1.5rem;
+                }
             }
 
             .brand-grid {
@@ -801,6 +779,10 @@
 
                 @media (min-width: 768px) {
                     grid-template-columns: repeat(3, 1fr);
+                }
+
+                @media (max-width: 480px) {
+                    gap: 1rem;
                 }
 
                 .brand-card {
@@ -819,6 +801,10 @@
                         width: 100%;
                         height: 300px;
                         object-fit: cover;
+
+                        @media (max-width: 480px) {
+                            height: 200px;
+                        }
                     }
 
                     h3 {
@@ -837,6 +823,10 @@
         background-color: #f3eeea;
         text-align: center;
 
+        @media (max-width: 480px) {
+            padding: 2rem 1rem;
+        }
+
         .promo-cards-content {
             max-width: 1000px;
             margin: 0 auto;
@@ -847,11 +837,21 @@
                 align-items: center;
                 margin-bottom: 2rem;
 
+                @media (max-width: 480px) {
+                    flex-direction: column;
+                    gap: 1rem;
+                    margin-bottom: 1.5rem;
+                }
+
                 h2 {
                     margin: 0;
                     font-size: 1.875rem;
                     font-weight: 700;
                     color: #111827;
+
+                    @media (max-width: 480px) {
+                        font-size: 1.5rem;
+                    }
                 }
 
                 .view-all-link {
@@ -871,6 +871,10 @@
                 @media (min-width: 768px) {
                     grid-template-columns: repeat(2, 1fr);
                 }
+
+                @media (max-width: 480px) {
+                    gap: 1rem;
+                }
             }
 
             .promo-card {
@@ -885,6 +889,10 @@
                     height: 450px;
                     object-fit: cover;
                     display: block;
+
+                    @media (max-width: 480px) {
+                        height: 300px;
+                    }
                 }
 
                 .promo-card-content {
@@ -904,6 +912,11 @@
                         transition: all 0.3s ease;
                         cursor: pointer;
 
+                        @media (max-width: 480px) {
+                            padding: 0.75rem 1.5rem;
+                            font-size: 0.8rem;
+                        }
+
                         &:hover {
                             transform: translateY(-2px);
                             box-shadow: 0 8px 20px rgba(49, 68, 56, 0.3);
@@ -918,22 +931,6 @@
         padding: 4rem 1.5rem;
         background-color: #ffffff;
         text-align: center;
-
-        @media (max-width: 768px) {
-            position: relative;
-
-            &::after {
-                content: "";
-                position: absolute;
-                bottom: 1rem;
-                left: 50%;
-                transform: translateX(-50%);
-                width: 40px;
-                height: 4px;
-                background: rgba(49, 68, 56, 0.3);
-                border-radius: 2px;
-            }
-        }
 
         .video-cards-content {
             display: flex;
@@ -953,6 +950,10 @@
             .carousel-arrows {
                 display: flex;
                 gap: 0.75rem;
+
+                @media (max-width: 768px) {
+                    display: none;
+                }
 
                 .arrow {
                     background-color: transparent;
@@ -995,6 +996,25 @@
             @media (min-width: 1024px) {
                 grid-template-columns: repeat(4, 1fr);
             }
+
+            @media (max-width: 768px) {
+                display: flex;
+                overflow-x: auto;
+                scroll-behavior: smooth;
+                gap: 1rem;
+                max-width: none;
+                margin: 0 -1.5rem;
+                padding: 0 1.5rem;
+
+                scrollbar-width: none;
+                -ms-overflow-style: none;
+
+                &::-webkit-scrollbar {
+                    display: none;
+                }
+
+                scroll-snap-type: x mandatory;
+            }
         }
 
         .video-card {
@@ -1011,9 +1031,22 @@
                 box-shadow: 0 8px 20px rgba(0, 0, 0, 0.12);
             }
 
+            @media (max-width: 768px) {
+                flex: 0 0 280px;
+                scroll-snap-align: start;
+
+                &:hover {
+                    transform: none;
+                }
+            }
+
             .video-container {
                 position: relative;
                 height: 400px;
+
+                @media (max-width: 768px) {
+                    height: 350px;
+                }
 
                 video {
                     width: 100%;
@@ -1045,6 +1078,11 @@
                         flex-shrink: 0;
                         box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
 
+                        @media (max-width: 768px) {
+                            width: 40px;
+                            height: 40px;
+                        }
+
                         img {
                             width: 100%;
                             height: 100%;
@@ -1066,6 +1104,11 @@
                             overflow: hidden;
                             text-overflow: ellipsis;
                             max-width: 150px;
+
+                            @media (max-width: 768px) {
+                                font-size: 0.9rem;
+                                max-width: 180px;
+                            }
                         }
 
                         .price {
@@ -1073,6 +1116,10 @@
                             color: #fff;
                             margin: 0;
                             text-shadow: 0 2px 4px rgba(0, 0, 0, 0.5);
+
+                            @media (max-width: 768px) {
+                                font-size: 0.9rem;
+                            }
                         }
                     }
                 }
@@ -1093,54 +1140,6 @@
             &:hover {
                 background-color: #1d4ed8;
             }
-        }
-    }
-
-    .cards-carousel {
-        overflow: hidden;
-        max-width: 1000px;
-        margin: 0 auto;
-        touch-action: pan-y;
-
-        @media (max-width: 768px) {
-            touch-action: pan-y;
-            cursor: grab;
-
-            &:active {
-                cursor: grabbing;
-            }
-        }
-    }
-
-    .cards-container {
-        display: flex;
-        transition: transform 0.3s ease;
-        gap: 1.5rem;
-
-        @media (max-width: 768px) {
-            transition: transform 0.3s cubic-bezier(0.25, 0.46, 0.45, 0.94);
-        }
-    }
-
-    .info-card {
-        flex: 0 0 calc(25% - 1.125rem);
-    }
-
-    .video-card {
-        flex: 0 0 calc(25% - 1.125rem);
-    }
-
-    @media (max-width: 900px) {
-        .info-card,
-        .video-card {
-            flex: 0 0 calc(50% - 0.75rem);
-        }
-    }
-
-    @media (max-width: 600px) {
-        .info-card,
-        .video-card {
-            flex: 0 0 100%;
         }
     }
 </style>
