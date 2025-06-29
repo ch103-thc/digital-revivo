@@ -869,7 +869,6 @@
 			@media (max-width: 768px) {
 				grid-template-columns: 1fr;
 				gap: 2rem;
-				text-align: center;
 			}
 		}
 
@@ -891,10 +890,6 @@
 			.social-links {
 				display: flex;
 				gap: 1rem;
-
-				@media (max-width: 768px) {
-					justify-content: center;
-				}
 
 				a {
 					display: flex;
@@ -920,8 +915,8 @@
 		}
 
 		.footer-links {
-			display: grid;
-			grid-template-columns: repeat(4, 1fr);
+			display: flex;
+			flex-wrap: wrap;
 			gap: 2rem;
 
 			@media (max-width: 768px) {
@@ -935,6 +930,9 @@
 		}
 
 		.footer-column {
+			flex: 1;
+			min-width: 150px;
+
 			h4 {
 				font-size: 1.1rem;
 				margin-bottom: 1rem;
