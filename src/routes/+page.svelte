@@ -98,23 +98,21 @@
     const deviceCards = [
         {
             image: "/img/devices/booster-pro.png",
-            title: "Device 1",
+            title: "Ultimate 6-in-1",
+            name: "Booster Pro",
             link: "/products/device-1",
         },
         {
             image: "/img/devices/booster-h.png",
-            title: "Device 2",
+            title: "Glow Booster",
+            name: "Booster-H",
             link: "/products/device-2",
         },
         {
             image: "/img/devices/airshot.png",
-            title: "Device 3",
+            title: "Needle-Free Pore Care",
+            name: "ATS Air Shot",
             link: "/products/device-3",
-        },
-        {
-            image: "/img/devices/device4.jpg",
-            title: "Device 4",
-            link: "/products/device-4",
         },
     ];
 
@@ -203,7 +201,7 @@
 <!-- NEW BESTSELLERS SECTION -->
 <section class="bestsellers">
     <div class="bestsellers-content">
-        <h2>Our best selling products</h2>
+        <h2>Best selling products</h2>
         <a href="/collections/bestsellers" class="view-all-link">View All</a>
     </div>
     <div class="cards-grid">
@@ -317,7 +315,17 @@
                     target="_blank"
                     rel="noopener noreferrer"
                 >
-                    <img src={card.image} alt={card.title} />
+                    <div class="device-container">
+                        <img src={card.image} alt={card.title} />
+                        <div class="device-overlay">
+                            <div class="device-info">
+                                <h3>{card.title}</h3>
+                                <p class="device-name">
+                                    {card.name}
+                                </p>
+                            </div>
+                        </div>
+                    </div>
                 </a>
             {/each}
         </div>
@@ -882,7 +890,7 @@
 
     .device-cards {
         padding: 4rem 1.5rem;
-        background-color: #f3eeea;
+        background-color: #ffffff;
         text-align: center;
 
         .device-cards-content {
@@ -911,29 +919,76 @@
                 }
 
                 @media (min-width: 1024px) {
-                    grid-template-columns: repeat(4, 1fr);
+                    grid-template-columns: repeat(3, 1fr);
                 }
             }
 
             .device-card {
-                position: relative;
-                width: 100%;
-                height: 350px;
+                background: white;
+                border-radius: 0.75rem;
                 overflow: hidden;
-                border-radius: 0.5rem;
+                box-shadow: 0 4px 6px rgba(0, 0, 0, 0.07);
+                transition:
+                    transform 0.3s,
+                    box-shadow 0.3s;
                 display: block;
-                box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
-                transition: transform 0.3s;
+                text-decoration: none;
 
                 &:hover {
-                    transform: scale(1.02);
+                    transform: translateY(-4px);
+                    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.12);
                 }
 
-                img {
-                    width: 100%;
-                    height: 100%;
-                    object-fit: cover;
-                    display: block;
+                .device-container {
+                    position: relative;
+                    height: 400px;
+
+                    img {
+                        width: 100%;
+                        height: 100%;
+                        object-fit: cover;
+                        display: block;
+                    }
+
+                    .device-overlay {
+                        position: absolute;
+                        top: 0;
+                        left: 0;
+                        right: 0;
+                        background: linear-gradient(
+                            to bottom,
+                            rgba(0, 0, 0, 0.8) 0%,
+                            rgba(0, 0, 0, 0.4) 50%,
+                            transparent 100%
+                        );
+                        padding: 1.5rem 1rem;
+                        display: flex;
+                        align-items: flex-start;
+                        justify-content: center;
+
+                        .device-info {
+                            text-align: center;
+                            max-width: 250px;
+
+                            h3 {
+                                font-size: 0.9rem;
+                                font-weight: 400;
+                                color: rgba(255, 255, 255, 0.9);
+                                margin: 0;
+                                line-height: 1.5;
+                                text-shadow: 0 2px 4px rgba(0, 0, 0, 0.5);
+                            }
+
+                            .device-name {
+                                color: white;
+                                margin: 0 0 0.5rem 0;
+                                font-size: 1.25rem;
+                                font-weight: 700;
+                                line-height: 1.4;
+                                text-shadow: 0 2px 4px rgba(0, 0, 0, 0.5);
+                            }
+                        }
+                    }
                 }
             }
         }
@@ -941,7 +996,7 @@
 
     .video-cards {
         padding: 4rem 1.5rem;
-        background-color: #ffffff;
+        background-color: #f3eeea;
         text-align: center;
 
         .video-cards-content {
@@ -1049,8 +1104,8 @@
             }
 
             @media (max-width: 768px) {
-                flex: 0 0 280px;
-                width: 280px;
+                flex: 0 0 220px;
+                width: 220px;
             }
 
             .video-container {

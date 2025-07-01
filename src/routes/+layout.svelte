@@ -298,6 +298,25 @@
 			document.removeEventListener("click", handleClickOutside);
 		};
 	});
+
+	let showMobileSearch = $state(false);
+
+	const toggleMobileSearch = () => {
+		if (!showMobileSearch) {
+			// Opening the search
+			showMobileSearch = true;
+			// Focus the search input after a short delay to ensure it's rendered
+			setTimeout(() => {
+				searchInputRef?.focus();
+			}, 100);
+		} else {
+			// Closing the search - add a delay to let the animation complete first
+			showMobileSearch = false;
+			// Clear the search query when closing (optional)
+			searchQuery = "";
+			showAutocomplete = false;
+		}
+	};
 </script>
 
 <svelte:window on:resize={checkMobile} />
@@ -312,8 +331,21 @@
 			</div>
 
 			<div class="nav-right">
-				<div class="search-container">
-					<div class="search-wrapper">
+				<div
+					class="search-container"
+					class:mobile-search-active={showMobileSearch}
+				>
+					<button
+						class="mobile-search-toggle"
+						onclick={toggleMobileSearch}
+					>
+						<Icon
+							icon="mingcute:search-line"
+							width="20"
+							height="20"
+						/>
+					</button>
+					<div class="search-wrapper desktop-search">
 						<Icon
 							icon="mingcute:search-line"
 							width="20"
@@ -330,6 +362,33 @@
 							class="search-input"
 							autocomplete="off"
 						/>
+					</div>
+
+					<div
+						class="search-wrapper mobile-search"
+						class:active={showMobileSearch}
+					>
+						<Icon
+							icon="mingcute:search-line"
+							width="20"
+							height="20"
+							class="search-icon"
+						/>
+						<input
+							type="text"
+							bind:value={searchQuery}
+							oninput={handleSearchInput}
+							onkeydown={handleKeydown}
+							placeholder="Search products..."
+							class="search-input"
+							autocomplete="off"
+						/>
+						<button
+							class="mobile-search-close"
+							onclick={toggleMobileSearch}
+						>
+							<Icon icon="mdi:close" width="20" height="20" />
+						</button>
 					</div>
 
 					<!-- Autocomplete Dropdown -->
@@ -355,6 +414,14 @@
 						</div>
 					{/if}
 				</div>
+
+				<button class="menu-toggle" onclick={toggleMenu}>
+					<Icon
+						icon={isMenuOpen ? "mdi:close" : "mdi:menu"}
+						width="24"
+						height="24"
+					/>
+				</button>
 
 				<ul class="menulist" class:active={isMenuOpen}>
 					<li>
@@ -407,14 +474,6 @@
 					</li>
 				</ul>
 			</div>
-
-			<button class="menu-toggle" onclick={toggleMenu}>
-				<Icon
-					icon={isMenuOpen ? "mdi:close" : "mdi:menu"}
-					width="24"
-					height="24"
-				/>
-			</button>
 		</div>
 	</div>
 
@@ -641,6 +700,24 @@
 			justify-content: center;
 			padding: 0 1rem;
 
+			.mobile-search-toggle {
+				display: none;
+				background: none;
+				border: none;
+				cursor: pointer;
+				padding: 8px;
+				border-radius: 50%;
+				transition: background-color 0.2s ease;
+
+				&:hover {
+					background-color: rgba(0, 0, 0, 0.1);
+				}
+
+				@media (max-width: 768px) {
+					display: block;
+				}
+			}
+
 			.search-wrapper {
 				position: relative;
 				display: flex;
@@ -674,6 +751,62 @@
 						outline: none;
 					}
 				}
+
+				.mobile-search-close {
+					display: none;
+					background: none;
+					border: none;
+					cursor: pointer;
+					padding: 8px;
+					margin-right: 8px;
+					border-radius: 50%;
+					transition: background-color 0.2s ease;
+
+					&:hover {
+						background-color: rgba(0, 0, 0, 0.1);
+					}
+				}
+
+				&.desktop-search {
+					@media (max-width: 768px) {
+						display: none;
+					}
+				}
+
+				&.mobile-search {
+					display: none;
+					position: fixed;
+					top: 80px;
+					left: 5%;
+					right: 5%;
+					width: 90%;
+					background: white;
+					box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+					z-index: 1000;
+					border-radius: 20px;
+					transform: translateY(-100px) scale(0.95);
+					opacity: 0;
+					visibility: hidden;
+					transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+
+					@media (max-width: 768px) {
+						display: flex;
+
+						&.active {
+							transform: translateY(0) scale(1);
+							opacity: 1;
+							visibility: visible;
+						}
+
+						.mobile-search-close {
+							display: block;
+						}
+
+						.search-input {
+							padding-right: 50px;
+						}
+					}
+				}
 			}
 
 			.autocomplete-dropdown {
@@ -689,6 +822,14 @@
 				max-height: 300px;
 				overflow-y: auto;
 				margin-top: 4px;
+
+				@media (max-width: 768px) {
+					position: fixed;
+					top: 140px;
+					left: 5%;
+					right: 5%;
+					width: 90%;
+				}
 
 				.autocomplete-item {
 					padding: 12px 16px;
@@ -726,30 +867,16 @@
 					}
 				}
 			}
+
+			@media (max-width: 768px) {
+				padding: 0;
+				position: relative;
+			}
 		}
 
 		@media (max-width: 768px) {
 			.menu-toggle {
 				display: block;
-			}
-
-			.search-container {
-				width: 100%;
-				padding: 10px 5%;
-				order: 2;
-
-				.search-wrapper {
-					width: 100%;
-
-					.search-input {
-						width: 100%;
-					}
-				}
-
-				.autocomplete-dropdown {
-					left: 5%;
-					right: 5%;
-				}
 			}
 		}
 
@@ -851,7 +978,7 @@
 	}
 
 	.footer {
-		background-color: #f3eeea;
+		background-color: #ffffff;
 
 		.footer-content {
 			max-width: 1200px;
