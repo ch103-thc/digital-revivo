@@ -329,7 +329,7 @@
 
     .breadcrumb {
         text-align: left;
-        max-width: 1000px;
+        max-width: 1140px;
         margin: 2rem auto;
         font-size: 0.9rem;
         color: #6b7280;
@@ -360,7 +360,7 @@
         border-bottom: 1px solid #e5e7eb;
 
         .featured-content {
-            max-width: 1000px;
+            max-width: 1140px;
             margin: 0 auto;
 
             h2 {
@@ -465,7 +465,7 @@
         background-color: #f3eeea;
 
         .grid-content {
-            max-width: 1000px;
+            max-width: 1140px;
             margin: 0 auto;
 
             .collections-grid {

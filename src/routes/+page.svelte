@@ -98,21 +98,21 @@
     const deviceCards = [
         {
             image: "/img/devices/booster-pro.png",
-            title: "Ultimate 6-in-1",
+            title: "ULTIMATE 6-IN-1",
             name: "Booster Pro",
-            link: "/products/device-1",
+            link: "https://amzn.to/4jDo5Jq",
         },
         {
             image: "/img/devices/booster-h.png",
-            title: "Glow Booster",
+            title: "GLOW BOOSTER",
             name: "Booster-H",
-            link: "/products/device-2",
+            link: "https://amzn.to/4iJveax",
         },
         {
             image: "/img/devices/airshot.png",
-            title: "Needle-Free Pore Care",
+            title: "NEEDLE-FREE PORE CARE",
             name: "ATS Air Shot",
-            link: "/products/device-3",
+            link: "https://amzn.to/4bIV3oM",
         },
     ];
 
@@ -123,48 +123,56 @@
             image: "/img/boj/revive-eye-serum.jpg",
             title: "BOJ Revive Eye Serum",
             price: "$17.00",
+            link: "https://amzn.to/4bYhRRr",
         },
         {
             video: "/videos/cosrx/advanced-snail-96-mucin-power-essence.mp4",
             image: "/img/cosrx/advanced-snail-96-mucin-power-essence.jpg",
             title: "COSRX Advanced Snail 96 Mucin Power Essence",
             price: "$17.00",
+            link: "https://amzn.to/3HluISH",
         },
         {
             video: "/videos/anua/heartleaf-77-soothing-toner.MP4",
             image: "/img/anua/heartleaf-77-soothing-toner.jpg",
             title: "ANUA Heartleaf 77 Soothing Toner",
             price: "$19.70",
+            link: "https://amzn.to/3Fz3KGg",
         },
         {
             video: "/videos/boj/ginseng-cleansing-oil.MP4",
             image: "/img/boj/ginseng-cleansing-oil.jpg",
             title: "BOJ Ginseng Cleansing Oil",
             price: "$19.00",
+            link: "https://amzn.to/3DS8Blj",
         },
         {
             video: "/videos/anua/niacinamide-10-txa-4-serum.MP4",
             image: "/img/anua/niacinamide-10-txa-4-serum.jpg",
             title: "ANUA Niacinamide 10 + TXA 4 Serum",
             price: "$22.00",
+            link: "https://amzn.to/4bD41E0",
         },
         {
             video: "/videos/anua/heartleaf-pore-control-cleansing-oil.mp4",
             image: "/img/anua/heartleaf-pore-control-cleansing-oil.jpg",
             title: "ANUA Heartleaf Pore Control Cleansing Oil",
             price: "$17.70",
+            link: "https://amzn.to/4iAM6QS",
         },
         {
             video: "/videos/boj/ground-rice-and-honey-glow-mask.mp4",
             image: "/img/boj/ground-rice-and-honey-glow-mask.jpg",
             title: "BOJ Ground Rice and Honey Glow Mask",
             price: "$18.00",
+            link: "https://amzn.to/3DCFJ0x",
         },
         {
             video: "/videos/anua/heartleaf-quercetinol-pore-deep-cleansing-foam.MP4",
             image: "/img/anua/heartleaf-quercetinol-pore-deep-cleansing-foam.jpg",
             title: "ANUA Heartleaf Quercetinol Pore Deep Cleansing Foam",
             price: "$13.00",
+            link: "https://amzn.to/4c0fg9B",
         },
     ];
 
@@ -348,19 +356,31 @@
         <!-- MODIFY: Show all cards on mobile for horizontal scroll, sliced cards for desktop -->
         {#each typeof window !== "undefined" && window.innerWidth <= 768 ? videoProducts : videoProducts.slice(videoIndex, videoIndex + cardsToShow) as product}
             <div class="video-card">
-                <div class="video-container">
-                    <video src={product.video} muted loop autoplay playsinline
-                    ></video>
-                    <div class="video-overlay">
-                        <div class="product-thumbnail">
-                            <img src={product.image} alt={product.title} />
-                        </div>
-                        <div class="product-info">
-                            <h3>{product.title}</h3>
-                            <p class="price">{product.price}</p>
+                <a
+                    href={product.link}
+                    class="card-link"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                >
+                    <div class="video-container">
+                        <video
+                            src={product.video}
+                            muted
+                            loop
+                            autoplay
+                            playsinline
+                        ></video>
+                        <div class="video-overlay">
+                            <div class="product-thumbnail">
+                                <img src={product.image} alt={product.title} />
+                            </div>
+                            <div class="product-info">
+                                <h3>{product.title}</h3>
+                                <p class="price">{product.price}</p>
+                            </div>
                         </div>
                     </div>
-                </div>
+                </a>
             </div>
         {/each}
     </div>
@@ -374,6 +394,10 @@
         min-height: 120vh;
         display: flex;
         align-items: center;
+
+        @media (max-width: 768px) {
+            min-height: 90vh;
+        }
 
         .hero-video {
             position: absolute;
@@ -389,7 +413,7 @@
         .hero-content {
             position: relative;
             z-index: 1;
-            max-width: 1000px;
+            max-width: 1140px;
             margin: 0 auto;
             display: grid;
             grid-template-columns: 1fr 1fr;
@@ -466,7 +490,7 @@
             display: flex;
             justify-content: space-between;
             align-items: center;
-            max-width: 1000px;
+            max-width: 1140px;
             margin: 0 auto 2rem;
 
             h2 {
@@ -494,7 +518,7 @@
             display: grid;
             grid-template-columns: repeat(2, 1fr);
             gap: 1.5rem;
-            max-width: 1000px;
+            max-width: 1140px;
             margin: 0 auto;
 
             @media (min-width: 768px) {
@@ -584,7 +608,7 @@
             display: flex;
             justify-content: space-between;
             align-items: center;
-            max-width: 1000px;
+            max-width: 1140px;
             margin: 0 auto 2rem;
 
             @media (max-width: 768px) {
@@ -642,7 +666,7 @@
             display: grid;
             grid-template-columns: repeat(1, 1fr);
             gap: 1.5rem;
-            max-width: 1000px;
+            max-width: 1140px;
             margin: 0 auto;
 
             @media (min-width: 768px) {
@@ -749,7 +773,7 @@
         text-align: center;
 
         .brand-cards-content {
-            max-width: 1000px;
+            max-width: 1140px;
             margin: 0 auto;
 
             h2 {
@@ -808,7 +832,7 @@
         text-align: center;
 
         .promo-cards-content {
-            max-width: 1000px;
+            max-width: 1140px;
             margin: 0 auto;
 
             .promo-header {
@@ -859,6 +883,10 @@
                     height: 450px;
                     object-fit: cover;
                     display: block;
+
+                    @media (max-width: 768px) {
+                        height: 350px;
+                    }
                 }
 
                 .promo-card-content {
@@ -882,6 +910,11 @@
                             transform: translateY(-2px);
                             box-shadow: 0 8px 20px rgba(49, 68, 56, 0.3);
                         }
+
+                        @media (max-width: 768px) {
+                            font-size: 0.75rem;
+                            padding: 0.75rem 1.5rem;
+                        }
                     }
                 }
             }
@@ -894,7 +927,7 @@
         text-align: center;
 
         .device-cards-content {
-            max-width: 1000px;
+            max-width: 1140px;
             margin: 0 auto;
 
             h2 {
@@ -906,6 +939,7 @@
 
                 @media (max-width: 768px) {
                     font-size: 1.5rem;
+                    margin-left: 1rem;
                 }
             }
 
@@ -920,6 +954,22 @@
 
                 @media (min-width: 1024px) {
                     grid-template-columns: repeat(3, 1fr);
+                }
+
+                @media (max-width: 768px) {
+                    display: flex;
+                    overflow-x: auto;
+                    scroll-behavior: smooth;
+                    gap: 1rem;
+                    padding: 0 1rem 1rem 1rem;
+                    margin: 0;
+                    max-width: none;
+
+                    scrollbar-width: none;
+                    -ms-overflow-style: none;
+                    &::-webkit-scrollbar {
+                        display: none;
+                    }
                 }
             }
 
@@ -937,6 +987,11 @@
                 &:hover {
                     transform: translateY(-4px);
                     box-shadow: 0 8px 20px rgba(0, 0, 0, 0.12);
+                }
+
+                @media (max-width: 768px) {
+                    flex: 0 0 280px;
+                    width: 280px;
                 }
 
                 .device-container {
@@ -969,22 +1024,19 @@
                         .device-info {
                             text-align: center;
                             max-width: 250px;
+                            margin-top: 1rem;
 
                             h3 {
-                                font-size: 0.9rem;
+                                font-size: 1rem;
                                 font-weight: 400;
                                 color: rgba(255, 255, 255, 0.9);
-                                margin: 0;
-                                line-height: 1.5;
                                 text-shadow: 0 2px 4px rgba(0, 0, 0, 0.5);
                             }
 
                             .device-name {
                                 color: white;
-                                margin: 0 0 0.5rem 0;
-                                font-size: 1.25rem;
+                                font-size: 1.85rem;
                                 font-weight: 700;
-                                line-height: 1.4;
                                 text-shadow: 0 2px 4px rgba(0, 0, 0, 0.5);
                             }
                         }
@@ -1003,7 +1055,7 @@
             display: flex;
             justify-content: space-between;
             align-items: center;
-            max-width: 1000px;
+            max-width: 1140px;
             margin: 0 auto 2rem;
 
             @media (max-width: 768px) {
@@ -1061,7 +1113,7 @@
             display: grid;
             grid-template-columns: repeat(1, 1fr);
             gap: 1.5rem;
-            max-width: 1000px;
+            max-width: 1140px;
             margin: 0 auto;
 
             @media (min-width: 768px) {

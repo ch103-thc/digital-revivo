@@ -252,7 +252,7 @@
 
         .breadcrumb {
             text-align: left;
-            max-width: 1000px;
+            max-width: 1140px;
             margin: 0 auto 2rem auto;
             font-size: 0.9rem;
             color: #6b7280;
@@ -278,7 +278,7 @@
         }
 
         .header-section {
-            max-width: 1000px;
+            max-width: 1140px;
             margin: 0 auto 2rem;
             text-align: left;
 
@@ -295,7 +295,7 @@
         }
 
         .description {
-            max-width: 1000px;
+            max-width: 1140px;
             margin: 0 auto 3rem auto;
             text-align: left;
 
@@ -311,7 +311,7 @@
         }
 
         .filters-section {
-            max-width: 1000px;
+            max-width: 1140px;
             margin: 0 auto 3rem;
 
             .filters-title {
@@ -387,7 +387,7 @@
             display: grid;
             grid-template-columns: repeat(2, 1fr);
             gap: 1.5rem;
-            max-width: 1000px;
+            max-width: 1140px;
             margin: 0 auto;
 
             @media (min-width: 768px) {

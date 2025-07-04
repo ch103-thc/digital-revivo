@@ -720,7 +720,7 @@
 
         .breadcrumb {
             text-align: left;
-            max-width: 1000px;
+            max-width: 1140px;
             margin: 0 auto 2rem auto;
             font-size: 0.9rem;
             color: #6b7280;
@@ -746,7 +746,7 @@
         }
 
         .header-section {
-            max-width: 1000px;
+            max-width: 1140px;
             margin: 0 auto 3rem;
             text-align: center;
 
@@ -764,7 +764,7 @@
         }
 
         .guide-navigation {
-            max-width: 1000px;
+            max-width: 1140px;
             margin: 0 auto 3rem;
             display: flex;
             flex-wrap: wrap;
@@ -797,7 +797,7 @@
         }
 
         .guide-content {
-            max-width: 1000px;
+            max-width: 1140px;
             margin: 0 auto;
 
             .content-section {
