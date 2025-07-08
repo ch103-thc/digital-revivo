@@ -190,7 +190,7 @@
 </script>
 
 <section class="hero-banner">
-    <video class="hero-video" autoplay muted loop playsinline>
+    <video class="hero-video" autoplay muted loop playsinline controls={false}>
         <source src="/videos/main-video.mp4" type="video/mp4" />
         Your browser does not support the video tag.
     </video>
@@ -369,6 +369,7 @@
                             loop
                             autoplay
                             playsinline
+                            controls={false}
                         ></video>
                         <div class="video-overlay">
                             <div class="product-thumbnail">
@@ -1168,6 +1169,22 @@
                     width: 100%;
                     height: 100%;
                     object-fit: cover;
+
+                    &::-webkit-media-controls {
+                        display: none !important;
+                    }
+
+                    &::-webkit-media-controls-panel {
+                        display: none !important;
+                    }
+
+                    &::-webkit-media-controls-play-button {
+                        display: none !important;
+                    }
+
+                    &::-webkit-media-controls-start-playback-button {
+                        display: none !important;
+                    }
                 }
 
                 .video-overlay {

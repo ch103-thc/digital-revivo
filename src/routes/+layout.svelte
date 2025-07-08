@@ -277,6 +277,7 @@
 		if (!event.target.closest(".search-container")) {
 			showAutocomplete = false;
 			selectedIndex = -1;
+			showMobileSearch = false;
 		}
 	}
 
